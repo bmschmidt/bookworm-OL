@@ -154,7 +154,7 @@ for line in open(editions):
 
     entries.append(output)
     #Periodically write out the results
-    if len(entries)>=1000:
+    if len(entries)>=10000:
         for individual in entries:
             try:
                 catalog.write(json.dumps(individual) + "\n")
@@ -162,7 +162,7 @@ for line in open(editions):
                 print "Unicode Error on "
                 print individual
 
-        print str(i*1000) + "\r"
+        print "parsed "  + str(i*1000) + " records\r"
         i = i+1
         entries = []
 
