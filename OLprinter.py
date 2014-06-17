@@ -20,8 +20,7 @@ def removeIAattribution(text):
 def closeHyphens(text):
     return re.sub(r"- *\n([\n ])*","",text)
 
-def printout(filename):
-    mine = ocaid(filename)
+def printout(mine):
     text = open("files/texts/raw/" + mine.fileLocation()).read()
     text = closeHyphens(text)
     text = dropNewlines(text)
@@ -33,8 +32,9 @@ def printout(filename):
 
 for file in files:
     try:
+        file = ocaid(file)
         text = printout(file)
-        print file + "\t" + text
+        print file.string + "\t" + text
     except TypeError:
         pass
         
