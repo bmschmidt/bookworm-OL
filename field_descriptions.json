@@ -4,7 +4,7 @@
     {"field":"lc1","datatype":"categorical","type":"character","unique":true},
     {"field":"lc2","datatype":"etc","type":"integer","unique":true},
     {"field":"publishers","datatype":"etc","type":"character","unique":false},
-
+    
     {"field":"subjects","datatype":"categorical","type":"character","unique":false},
     {"field":"publish_country","datatype":"categorical","type":"character","unique":true},
     {"field":"publish_places","datatype":"categorical","type":"character","unique":false},

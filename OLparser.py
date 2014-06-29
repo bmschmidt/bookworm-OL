@@ -49,22 +49,7 @@ class OLline(dict):
 outsidedata = dict()
 
 """
-for line in open(authors):
-    entry = OLline(line)
-    if entry.broken:
-        continue
-    for variable in author_vars:
-        try:
-            assignment = entry[variable]
-            try: 
-                outsidedata[entry['key']][variable] = assignment
-            except:
-                outsidedata[entry['key']] = dict()
-                outsidedata[entry['key']][variable] = assignment
-        except KeyError:
-            pass
 
-print "Author Data Loaded"
 
 print "Loading Work Data..."
 for line in open(works):

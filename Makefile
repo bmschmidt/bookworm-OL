@@ -2,23 +2,38 @@
 
 ### STUFF TO DO WITH THE BOOKWORM--run second
 
-Presidio:
-	git clone git@github.com:bmschmidt/Presidio
+bookworm: OL OL/files/texts/input.txt OL/files/metadata/field_descriptions.json OL/files/metadata/jsoncatalog.txt OL/files/texts/input.txt
+	cd OL; make;
+	touch $@
 
 
-Presidio/files/texts/raw:
-	mkdir -p Presidio/files/texts
-	ln -s ../../../files/texts/raw/ $@
+OL:
+	git clone git@github.com:bmschmidt/Presidio $@
 
 
-Presidio/files/metadata/jsoncatalog.txt:
-	mkdir -p Presidio/files/metadata
-	ln -s ../../../files/jsoncatalog.txt $@
+OL/files/texts/raw: OL
+	mkdir -p OL/files/texts
+	ln -sf ../../../files/texts/raw/ $@
 
-Presidio/files/metadata/field_descriptions.json:
-	ln -s ../../../files/descriptions.txt $@
+
+OL/files/metadata/jsoncatalog.txt:
+	mkdir -p OL/files/metadata
+	ln -sf ../../../files/jsoncatalog.txt $@
+
+OL/files/metadata/field_descriptions.json:
+	mkdir -p OL/files/metadata
+	ln -sf ../../../field_descriptions.json $@
+
+input.txt.gz:
+	find files/texts/raw -name "*.txt" | xargs -P 4 python OLprinter.py | gzip > $@ &
+
+OL/files/texts/input.txt:
+	mkdir -p OL/files/texts
+	ln -s ../../../input.txt $@
+
 
 #### STUFF TO DO WITH METADATA--run first.
+
 
 prefiles: files/ol_dump_editions_latest.txt files/ol_dump_works_latest.txt files/ol_dump_authors_latest.txt
 	touch prefiles
@@ -43,6 +58,9 @@ $(root)/metadata/catalog.txt: files/ol_dump_editions_latest.txt
 
 files/jsoncatalog.txt: prefiles
 	python OLparser.py
+
+files/authorjson.txt: prefiles
+	python authorParser.py > $@
 
 files/ol_dump_works_latest.txt:
 	#grep ocaid to keep it smaller and more relevant
