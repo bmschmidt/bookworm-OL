@@ -2,10 +2,9 @@
 
 ### STUFF TO DO WITH THE BOOKWORM--run second
 
-bookworm: OL OL/files/texts/input.txt OL/files/metadata/field_descriptions.json OL/files/metadata/jsoncatalog.txt OL/files/texts/input.txt
-	cd OL; make;
+bookworm: OL OL/files/metadata/field_descriptions.json OL/files/metadata/jsoncatalog.txt input.txt.gz
+	cd OL; make files/targets/encoded textStream="gunzip -c ../input.txt.gz";
 	touch $@
-
 
 OL:
 	git clone git@github.com:bmschmidt/Presidio $@
@@ -27,10 +26,9 @@ OL/files/metadata/field_descriptions.json:
 input.txt.gz:
 	find files/texts/raw -name "*.txt" | xargs -P 4 python OLprinter.py | gzip > $@ &
 
-OL/files/texts/input.txt:
-	mkdir -p OL/files/texts
-	ln -s ../../../input.txt $@
-
+#OL/files/texts/input.txt: input.txt.gz
+#	mkdir -p OL/files/texts
+#	ln -s ../../../input.txt $@
 
 #### STUFF TO DO WITH METADATA--run first.
 
