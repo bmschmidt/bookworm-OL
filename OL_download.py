@@ -4,6 +4,7 @@ import sys
 import time
 import json
 from subprocess import Popen,list2cmdline,PIPE
+import warnings
 
 execfile("parsingClasses.py")
 
@@ -25,7 +26,7 @@ def exec_commands(cmds):
     def success(p):
         return p.returncode == 0
     def fail():
-        print "ERROR OF SOME SORT!!!"
+        warnings.warn("ERROR OF SOME SORT!!!")
     max_task = 20
     processes = []
     while True:
@@ -57,7 +58,7 @@ for line in filelist:
     #if the file exists, we don't need to download it.
     try:
         foundIt = open(root + "/texts/raw/" + id.fileLocation())
-        print id.fileLocation() + " already exists"
+        #print id.fileLocation() + " already exists"
 
     except:
         try:

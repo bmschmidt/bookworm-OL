@@ -37,6 +37,7 @@ for file in files:
         print file.string + "\t" + text
     except TypeError:
         pass
-        
+    except IOError:
+        pass
 
 

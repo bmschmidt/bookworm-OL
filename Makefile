@@ -23,36 +23,30 @@ OL/files/metadata/field_descriptions.json:
 	mkdir -p OL/files/metadata
 	ln -sf ../../../field_descriptions.json $@
 
-input.txt.gz:
-	find files/texts/raw -name "*.txt" | xargs -P 4 python OLprinter.py | gzip > $@ &
+files/texts/raw//compressed.lzo:
 
-#OL/files/texts/input.txt: input.txt.gz
-#	mkdir -p OL/files/texts
-#	ln -s ../../../input.txt $@
+files/texts/raw/%/compressed.lzo: files/texts/raw/%
+	find $< -name "*.txt" | parallel -P 4 python OLprinter.py | lzop -c > $@
+
+#Compressed lzo files for each two-letter prefix gives an easier way to read things in.
+compressions: $(addsuffix /compressed.lzo, $(shell find files/texts/raw -maxdepth 1 -mindepth 1 -type d  | sort | tr " " "\n" | egrep "files/texts/raw/([A-Za-z0-9_-]){2}"))
+	touch compressions
 
 #### STUFF TO DO WITH METADATA--run first.
 
 
 prefiles: files/ol_dump_editions_latest.txt files/ol_dump_works_latest.txt files/ol_dump_authors_latest.txt
+	mkdir -p files
 	touch prefiles
 
-downloads: files/downloads prefiles files/jsoncatalog.txt
+downloads: prefiles files/jsoncatalog.txt
 	mkdir -p files/downloads
 	python OL_download.py
 	touch downloads
 
-files: 
-	mkdir -p files
-
-files/downloads: files
-	mkdir -p files/downloads
-
-$(files)/metadata/field_descriptions.json:
-	mv field_descriptions.json $(files)/metadata/field_descriptions.json
-
-$(root)/metadata/catalog.txt: files/ol_dump_editions_latest.txt
+$(root)/metadata/catalog.txt: files/jsoncatalog.txt
 	mkdir -p $(root)/files/metadata
-	python OLparser.py
+	ln -s ../../../files/jsoncatalog.txt $@
 
 files/jsoncatalog.txt: prefiles
 	python OLparser.py
